@@ -1,19 +1,26 @@
 using UnityEngine;
+using System.Collections; // 코루틴
 
 public class Enemy : MonoBehaviour
 {
     public int hp = 3; // 마법 3방
     private Animator anim;
+    private SpriteRenderer sr;
 
     public void Start()
     {
         anim = GetComponent<Animator>();
+        sr = GetComponent<SpriteRenderer>();
     }
 
     public void TakeDamage(int damage)
     {
         hp -= damage;
         Debug.Log("남은 체력:" +  hp);
+
+        CameraShake.instance.Shake(0.1f, 0.2f);
+
+        StartCoroutine(FlashCoroutine());
 
         if (hp <= 0)
         {
@@ -23,6 +30,13 @@ public class Enemy : MonoBehaviour
         {
             anim.SetTrigger("Hit");
         }
+    }
+
+    IEnumerator FlashCoroutine()
+    {
+        sr.color = Color.red;
+        yield return new WaitForSeconds(0.1f);
+        sr.color = Color.white;
     }
 
     public void Die()
