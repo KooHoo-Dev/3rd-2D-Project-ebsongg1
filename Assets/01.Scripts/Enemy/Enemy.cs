@@ -7,6 +7,9 @@ public class Enemy : MonoBehaviour
     private Animator anim;
     private SpriteRenderer sr;
 
+    [Header("드롭할 아이템 세팅")]
+    public GameObject dropItemPrefap;
+
     public void Start()
     {
         anim = GetComponent<Animator>();
@@ -47,6 +50,11 @@ public class Enemy : MonoBehaviour
 
         GetComponent<Collider2D>().enabled = false; // 죽은 적을 계속 때리는 걸 방지, 유령 상태
         this.enabled = false; // 스크립트 정지
+
+        if ( dropItemPrefap != null )
+        {
+            Instantiate(dropItemPrefap, transform.position, Quaternion.identity);
+        }
 
         Destroy(gameObject, 2f);
     }
