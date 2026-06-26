@@ -26,7 +26,9 @@ public class Projectile : MonoBehaviour
 
         if ( hitEffectPrefab != null )
         {
-            Instantiate(hitEffectPrefab, transform.position, transform.rotation);
+            GameObject effect = Instantiate(hitEffectPrefab, transform.position, transform.rotation);
+
+            Destroy(effect, 1f);
         }
 
         Destroy(gameObject);

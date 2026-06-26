@@ -9,11 +9,11 @@ public class SpellBook : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            PlayerAttack attackScript = GetComponent<PlayerAttack>();
+            PlayerAttack attackScript = collision.GetComponent<PlayerAttack>();
 
             if (attackScript != null )
             {
-                attackScript.ChangeMagic(bookMagicType);
+                attackScript.UnlockMagic(bookMagicType);
             }
 
             Debug.Log("마법책 획득");
