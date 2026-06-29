@@ -47,6 +47,8 @@ public class PlayerController : MonoBehaviour
             bool isMoving = (Input.GetAxisRaw("Horizontal") != 0);
             anim.SetBool("Move", isMoving);
         }
+
+
     }
 
     public void FixedUpdate()

@@ -14,13 +14,17 @@
         {
             "_key": "Collisions_1",
             "_asset": {
-                "instanceID": 0
+                "fileID": 11400000,
+                "guid": "d7d446b4731267842b5f11c59c2907b5",
+                "type": 2
             }
         },
         {
             "_key": "Collisions_3",
             "_asset": {
-                "instanceID": 0
+                "fileID": 11400000,
+                "guid": "d7d446b4731267842b5f11c59c2907b5",
+                "type": 2
             }
         },
         {
