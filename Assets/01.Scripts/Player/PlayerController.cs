@@ -18,9 +18,12 @@ public class PlayerController : MonoBehaviour
     private bool isGrounded;
     private bool facingRight = true;
 
+    private Animator anim;
+
     public void Start()
     {
         rbody = GetComponent<Rigidbody2D>();
+        anim = GetComponentInChildren<Animator>();
     }
 
     public void Update()
@@ -36,6 +39,14 @@ public class PlayerController : MonoBehaviour
 
         if (moveInput > 0 && !facingRight) Flip();
         else if(moveInput < 0 && facingRight) Flip();
+
+        // 좌우 입력값(X)이 0이 아니면 움직이는 중!
+        if (anim != null)
+        {
+            // 키보드 좌우 방향키를 누르고 있다면 true, 손을 떼면 false
+            bool isMoving = (Input.GetAxisRaw("Horizontal") != 0);
+            anim.SetBool("Move", isMoving);
+        }
     }
 
     public void FixedUpdate()
@@ -46,8 +57,8 @@ public class PlayerController : MonoBehaviour
     public void Flip()
     {
         facingRight = !facingRight;
-        Vector3 scaler = transform.localScale;
-        scaler.x *= -1;
-        transform.localScale = scaler;
+
+        transform.Rotate(0f, 180f, 0f);
+       
     }
 }

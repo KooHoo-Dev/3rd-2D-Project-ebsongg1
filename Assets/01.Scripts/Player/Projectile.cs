@@ -17,6 +17,8 @@ public class Projectile : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D hitInfo)
     {
+        if (hitInfo.CompareTag("Player")) return;
+
         Enemy enemy = hitInfo.GetComponent<Enemy>(); // enemy를 가지고 있는지 확인
 
         if ( enemy != null )

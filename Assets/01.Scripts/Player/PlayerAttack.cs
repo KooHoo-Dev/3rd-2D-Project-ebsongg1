@@ -1,6 +1,8 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerAttack : MonoBehaviour
 {
@@ -25,68 +27,126 @@ public class PlayerAttack : MonoBehaviour
     public float penetrateCoolTime = 5f;
     public float meteorCoolTime = 10f;
 
-    private float currentCoolTime = 0f;
+    [Header("마법별 실시간 쿨타임 초시계")]
+    private float basicTimer = 0f;
+    private float penetrateTimer = 0f;
+    private float meteorTimer = 0f;
+
+    [Header("쿨타임 UI 연동")]
+    public Image penetrateShadow;  
+    public Image meteorShadow;
+
 
     [Header("해금 상태")]
     public bool hasPenetrate = false;
     public bool hasMeteor = false;
 
     [Header("운석 세팅")]
-    public int meteorCount = 10;
-    
+    public int meteorCount = 15;
+
+    [Header("스토리 이벤트 UI")]
+    public GameObject loreBookUI;
+    public TextMeshProUGUI loreTextUI;
+
+    public GameObject systemMessageUI; // 하단 대화창
+    public TextMeshProUGUI systemMessageText;
+    private Animator anim;
+
+    public void Start()
+    {
+        anim = GetComponentInChildren<Animator>();
+    }
+
 
     public void Update()
     {
-        if (currentCoolTime > 0)
-        {
-            currentCoolTime -= Time.deltaTime;
-        }
+        if (basicTimer > 0f) basicTimer -= Time.deltaTime;
+        if (penetrateTimer > 0f) penetrateTimer -= Time.deltaTime;
+        if (meteorTimer > 0f) meteorTimer -= Time.deltaTime;
 
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            currentMagic = MagicType.Basic;
-            currentCoolTime = 0f;
-            Debug.Log("무기 교체 : 기본 마법(R)");
-        }
+        UpdateSkillUI();
 
         if (Input.GetKeyDown(KeyCode.Q) && hasPenetrate == true)
         {
-            currentMagic = MagicType.Penetrate;
-            currentCoolTime = 0f;
+
+            if (currentMagic == MagicType.Penetrate)
+            {
+                currentMagic = MagicType.Basic; // 이미 관통이면 기본으로 해제
+                ShowSystemMessage("마법 해제 : 기본 상태");
+            }
+            else
+            {
+                currentMagic = MagicType.Penetrate; // 아니면 관통으로 장착
+                ShowSystemMessage("마법 장착 : 관통 마법 (Q)");
+            }
+
             Debug.Log("무기 교체 : 관통 마법(Q)");
         }
 
         if (Input.GetKeyDown(KeyCode.E) && hasMeteor == true)
         {
-            currentMagic = MagicType.Meteor;
-            currentCoolTime = 0f;
-            Debug.Log("무기 교체 : 연사 마법(E)");
+            if (currentMagic == MagicType.Meteor)
+            {
+                currentMagic = MagicType.Basic; 
+                ShowSystemMessage("마법 해제 : 기본 상태");
+            }
+            else
+            {
+                currentMagic = MagicType.Meteor; 
+                ShowSystemMessage("마법 장착 : 운석 마법 (E)");
+            }
+            
+            Debug.Log("무기 교체 : 운석 마법(E)");
         }
 
-        if (Input.GetKeyDown(KeyCode.Z) && currentCoolTime <=0)
+        if (Input.GetKeyDown(KeyCode.Z))
         {
             Attack();
         }
     }
+
+    public void UpdateSkillUI()
+    {
+        penetrateShadow.fillAmount = penetrateTimer / penetrateCoolTime;
+
+        meteorShadow.fillAmount = meteorTimer / meteorCoolTime;
+    }
+
 
     public void Attack()
     {
         switch(currentMagic)
         {
             case MagicType.Basic:
-                Shoot();
-                currentCoolTime = basicCoolTime;
+                // 기본 마법 초시계가 다 돌았는지 검사
+                if (basicTimer <= 0f)
+                {
+                    Shoot();
+                    basicTimer = basicCoolTime; // 공용 말고 전용 초시계에 쿨타임 세팅
+
+                    if (anim != null) anim.SetTrigger("Attack");
+                }
                 break;
 
             case MagicType.Penetrate:
-            ShootPenetrate();
-            currentCoolTime = penetrateCoolTime;
-            break;
+                if (penetrateTimer <= 0f)
+                {
+                    ShootPenetrate();
+                    penetrateTimer = penetrateCoolTime;
+
+                    if (anim != null) anim.SetTrigger("Attack");
+                }
+                break;
 
             case MagicType.Meteor:
-            ShootMeteor();
-            currentCoolTime = meteorCoolTime;
-            break;
+                if (meteorTimer <= 0f)
+                {
+                    ShootMeteor();
+                    meteorTimer = meteorCoolTime;
+
+                    if (anim != null) anim.SetTrigger("Attack");
+                }
+                break;
         }
     }
 
@@ -112,14 +172,13 @@ public class PlayerAttack : MonoBehaviour
     {
         for (int i = 0; i  < meteorCount; i++)
         {
-            float targetX = firePoint.position.x + (firePoint.right.x * 5f);
-            float randomX = targetX + Random.Range(-5f, 5f);
-            float randomY = transform.position.y + 10f + Random.Range(0f, 2f); // 위에서 떨어지게
+            float randomX = transform.position.x + Random.Range(-10f, 10f);
+            float randomY = transform.position.y + 7f + Random.Range(0f, 2f); // 위에서 떨어지게
             Vector3 spawnPos = new Vector3(randomX, randomY, 0);
 
             Instantiate(meteorPrefab, spawnPos, Quaternion.identity);
 
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.08f);
         }
     }
 
@@ -134,7 +193,50 @@ public class PlayerAttack : MonoBehaviour
             hasMeteor = true;
         }
 
-        currentMagic = newMagic;
         Debug.Log($"마법 각성! {currentMagic}이 영구 해금!");
+    }
+
+    public void OpenLoreBook()
+    {
+        loreBookUI.SetActive(true); // 책 UI 
+
+        Time.timeScale = 0f;
+
+    }
+
+    public void CloseBookAndGetMagic()
+    {
+        loreBookUI.SetActive(false); // 책 UI 끄기
+        Time.timeScale = 1f;         
+
+        StartCoroutine(SystemMessageRoutine());
+    }
+
+    public void ShowSystemMessage(string msg)
+    {
+        // 대화창의 글씨를 넘겨받은 문구로 바꿈
+        if (systemMessageText != null)
+        {
+            systemMessageText.text = msg;
+        }
+
+        // 2. 이미 대화창이 떠있을 때 또 메시지가 오면 꼬일 수 있으니, 기존 초시계를 끄고 새로 켬
+        StopCoroutine("SystemMessageRoutine");
+        StartCoroutine("SystemMessageRoutine");
+    }
+
+    IEnumerator SystemMessageRoutine() // 대화창 껐다 키기
+    {
+        systemMessageUI.SetActive(true);
+        yield return new WaitForSeconds(3f);
+        systemMessageUI.SetActive(false);
+    }
+
+
+    public void OpenLoreBook(string bookContent)
+    {
+        loreTextUI.text = bookContent; // 넘겨받은 글로 텍스트 덮어쓰기
+        loreBookUI.SetActive(true);    // 책 UI 켜기
+        Time.timeScale = 0f;           // 시간 멈추기
     }
 }

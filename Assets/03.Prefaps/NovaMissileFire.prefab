@@ -4858,7 +4858,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 546269952122484462}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
@@ -5054,7 +5054,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MeteorProjectile
   speed: 10
   damage: 10
-  hitEffectPrefab: {fileID: 0}
+  hitEffectPrefab: {fileID: 130346, guid: 07bf9ced87963e24299c2c2a22bfeeb6, type: 3}
 --- !u!1 &1748838541462930140
 GameObject:
   m_ObjectHideFlags: 0

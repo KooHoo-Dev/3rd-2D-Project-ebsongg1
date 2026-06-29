@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31471dfd53d5490a956a89a1b2d11ad9, type: 3}
   m_Name: New LDtkIntGridTile
   m_EditorClassIdentifier: LDtkUnity.Runtime::LDtkUnity.LDtkIntGridTile
-  _colliderType: 0
+  _colliderType: 2
   _customPhysicsSprite: {fileID: 0}
   _tilemapTag: Untagged
-  _tilemapLayerMask: 0
+  _tilemapLayerMask: 3
   _physicsMaterial: {fileID: 0}
   _gameObject: {fileID: 0}
