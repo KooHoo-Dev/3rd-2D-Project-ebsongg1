@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
         if (moveInput > 0 && !facingRight) Flip();
         else if(moveInput < 0 && facingRight) Flip();
 
-        // 좌우 입력값(X)이 0이 아니면 움직이는 중!
+        // 좌우 입력값(X)이 0이 아니면 움직이는 중
         if (anim != null)
         {
             // 키보드 좌우 방향키를 누르고 있다면 true, 손을 떼면 false

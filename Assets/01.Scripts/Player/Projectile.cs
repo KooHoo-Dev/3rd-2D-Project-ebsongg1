@@ -20,10 +20,16 @@ public class Projectile : MonoBehaviour
         if (hitInfo.CompareTag("Player")) return;
 
         Enemy enemy = hitInfo.GetComponent<Enemy>(); // enemy를 가지고 있는지 확인
+        BossHealth boss = hitInfo.GetComponent<BossHealth>();
 
         if ( enemy != null )
         {
             enemy.TakeDamage(damage);
+        }
+
+        if (boss != null)
+        {
+            boss.TakeDamage(damage);
         }
 
         if ( hitEffectPrefab != null )

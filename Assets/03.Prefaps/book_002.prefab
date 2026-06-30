@@ -106,6 +106,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpellBook
   bookMagicType: 1
+  timerUI: {fileID: 0}
+  myLoreText: 
 --- !u!61 &-5208223960239184766
 BoxCollider2D:
   m_ObjectHideFlags: 0
