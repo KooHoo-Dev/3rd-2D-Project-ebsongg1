@@ -17,6 +17,8 @@ public class PlayerHealth : MonoBehaviour
     private bool isInvincible = false;  // 지금 무적 상태인가?
     private bool isDead = false;
 
+    public bool isEnding = false;
+
     // 배열로 변경: 그림 조각들을 담음
     private SpriteRenderer[] spriteRenderers;
     private Animator anim;
@@ -129,8 +131,11 @@ public class PlayerHealth : MonoBehaviour
     // 1.5초 뒤에 "GameOverScene"으로 넘어가는 타이머
     IEnumerator GoToGameOverScene()
     {
-        yield return new WaitForSeconds(1.5f);
-        SceneManager.LoadScene("Scenes_GameOver");
+        if (!isEnding)
+        {
+            yield return new WaitForSeconds(1.5f);
+            SceneManager.LoadScene("Scenes_GameOver");
+        }
     }
 
 }

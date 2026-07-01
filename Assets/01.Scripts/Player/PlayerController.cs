@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
 
     public void Update()
     {
+        if (GetComponent<PlayerHealth>().isEnding) return;
+
         moveInput = Input.GetAxisRaw("Horizontal"); // 좌우 입력 받기
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer); // 바닥에 닿아있는지 원형 범위로 체크
