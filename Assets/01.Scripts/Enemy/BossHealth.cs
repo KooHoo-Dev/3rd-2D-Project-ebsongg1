@@ -70,6 +70,12 @@ public class BossHealth : MonoBehaviour
         DataManager.killCount++;
         Debug.Log($"현재 총 처치한 적의 수: {DataManager.killCount}");
 
+        GameClearManager clearManager = FindFirstObjectByType<GameClearManager>();
+        if (clearManager != null)
+        {
+            clearManager.TriggerGameClear();
+        }
+
         // 리지드바디의 시뮬레이션을 꺼서 공중에 고정시킴
         Rigidbody2D rbody = GetComponent<Rigidbody2D>();
         if (rbody != null)
@@ -84,5 +90,12 @@ public class BossHealth : MonoBehaviour
         if (rbody != null) rbody.linearVelocity = Vector2.zero; // 밀림 멈추기
 
         DataManager.killCount++;
+
+        // 보스 처치 완료 카메라 원래대로 복귀
+        PlayerCameraFollow camScript = Camera.main.GetComponent<PlayerCameraFollow>();
+        if (camScript != null)
+        {
+            camScript.EndBossMode();
+        }
     }
 }

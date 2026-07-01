@@ -50,6 +50,10 @@ public class BossAI : MonoBehaviour
 
     private float groundY; // 보스가 원래 있던 땅바닥 높이 기억용
 
+    [Header("카메라 연출")]
+    public Transform bossRoomCenter; // 보스방 중앙 위치
+    public float bossCameraZoom = 8f; // 줌아웃 크기 (기본이 5라면 8~10 정도로 설정)
+
     public void Start()
     {
         anim = GetComponentInChildren<Animator>();
@@ -72,6 +76,7 @@ public class BossAI : MonoBehaviour
         if (player == null || currentState == BossState.Dead)
         {
             ManageHealthBar(false);
+            ManageCameraMode(false);
             return;
         }
 
@@ -98,10 +103,12 @@ public class BossAI : MonoBehaviour
         if (currentState == BossState.Idle)
         {
             ManageHealthBar(false);
+            ManageCameraMode(false);
         }
         else
         {
             ManageHealthBar(true);
+            ManageCameraMode(true);
         }
 
         // 뇌 상태(currentState)에 따라 행동을 완벽하게 분리하는 스위치
@@ -117,6 +124,7 @@ public class BossAI : MonoBehaviour
             case BossState.RangeAttack:
             case BossState.MeleeAttack:
             case BossState.CastMagic:
+            case BossState.CastMeteor:
                 break;
         }
 
@@ -134,6 +142,25 @@ public class BossAI : MonoBehaviour
             if (bossHealth.hpbarUI.activeSelf != isActive)
             {
                 bossHealth.hpbarUI.SetActive(isActive);
+            }
+        }
+    }
+
+    // 카메라 줌아웃/줌인을 안전하게 처리해주는 전용 제어 함수
+    public void ManageCameraMode(bool isBossMode)
+    {
+        PlayerCameraFollow camScript = Camera.main.GetComponent<PlayerCameraFollow>();
+        if (camScript != null)
+        {
+            if (isBossMode && bossRoomCenter != null)
+            {
+                // 전투 상태면 보스방 중앙 비추기
+                camScript.StartBossMode(bossRoomCenter.position, bossCameraZoom);
+            }
+            else
+            {
+                // 대기 상태거나 도망쳤으면 레이 추적 모드로 복귀
+                camScript.EndBossMode();
             }
         }
     }
