@@ -65,7 +65,7 @@ public class BossAI : MonoBehaviour
         {
             player = playerObj.transform;
         }
-        // 보스가 처음 서 있던 바닥의 Y축 높이를 기억해둔다 (나중에 내려올 때 씀)
+        // 보스가 처음 서 있던 바닥의 Y축 높이를 기억해둠 (나중에 내려올 때 씀)
         groundY = transform.position.y;
    
 }
@@ -159,7 +159,7 @@ public class BossAI : MonoBehaviour
             }
             else
             {
-                // 대기 상태거나 도망쳤으면 레이 추적 모드로 복귀
+                // 대기 상태거나 도망쳤으면 추적 모드로 복귀
                 camScript.EndBossMode();
             }
         }
@@ -331,18 +331,18 @@ public class BossAI : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
-        // 머리 위 높은 곳(하늘)에서 운석을 여러 개 떨어뜨림
-        for (int i = 0; i < 5; i++) // 운석 5개 연속 발사
+        // 머리 위에서 운석을 여러 개 떨어뜨림
+        for (int i = 0; i < 17; i++)
         {
             // 현재 X좌표 + 하늘(Y + 10) 위치를 타겟으로
             Vector2 spawnPos = new Vector2(player.position.x, player.position.y + 10f);
 
             // 약간의 오차(랜덤)를 줘서 플레이어 주변에 떨어지게 함
-            spawnPos.x += Random.Range(-2f, 2f);
+            spawnPos.x += Random.Range(-10f, 10f);
 
             Instantiate(meteorPrefab, spawnPos, Quaternion.identity);
 
-            yield return new WaitForSeconds(0.4f); // 0.4초 간격으로 투하
+            yield return new WaitForSeconds(0.25f); // 간격으로 투하
         }
 
         // 마법 다 쏘고 사이 시간

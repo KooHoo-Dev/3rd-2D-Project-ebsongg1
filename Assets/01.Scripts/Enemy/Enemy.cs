@@ -48,6 +48,8 @@ public class Enemy : MonoBehaviour
 
         anim.SetTrigger("Die");
 
+        DataManager.killCount++;
+
         GetComponent<Collider2D>().enabled = false; // 죽은 적을 계속 때리는 걸 방지, 유령 상태
         this.enabled = false; // 스크립트 정지
 

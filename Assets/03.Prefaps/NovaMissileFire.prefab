@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 8266837074863249983}
   - component: {fileID: 2412333893530086690}
   - component: {fileID: 8382318176785938896}
-  - component: {fileID: -4726265597210709443}
+  - component: {fileID: -5170530269452087355}
   m_Layer: 0
   m_Name: NovaMissileFire
   m_TagString: Untagged
@@ -5040,7 +5040,7 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &-4726265597210709443
+--- !u!114 &-5170530269452087355
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5049,12 +5049,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 546269952122484462}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 463ecab57912eb7489dae5325339a07b, type: 3}
+  m_Script: {fileID: 11500000, guid: aee4c53182fa82e43bba07fc3638d6a5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MeteorProjectile
-  speed: 10
-  damage: 10
-  hitEffectPrefab: {fileID: 130346, guid: 07bf9ced87963e24299c2c2a22bfeeb6, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::Meteor
+  fallSpeed: 10
+  damage: 1
+  lifeTime: 3
 --- !u!1 &1748838541462930140
 GameObject:
   m_ObjectHideFlags: 0

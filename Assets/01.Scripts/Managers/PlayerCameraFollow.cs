@@ -31,6 +31,9 @@ public class PlayerCameraFollow : MonoBehaviour
 
     public void LateUpdate()
     {
+        // 대화 중 시간 정지 상태에서도 카메라가 부드럽게 움직이도록 unscaledDeltaTime 사용
+        float dt = Time.unscaledDeltaTime;
+
         // 1. 위치 이동 (보스 모드 vs 일반 모드)
         if (isBossMode)
         {
@@ -40,7 +43,7 @@ public class PlayerCameraFollow : MonoBehaviour
         }
         else if (target != null)
         {
-            // 평소처럼 레이 쫓아가기
+            // 평소처럼 주인공 쫓아가기
             Vector3 desiredPosition = target.position + offset;
             transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
         }
@@ -55,6 +58,9 @@ public class PlayerCameraFollow : MonoBehaviour
     // 보스전 시작(BossAI에서 불러줄 함수)
     public void StartBossMode(Vector3 centerPos, float zoomOutAmount)
     {
+        // 확인용
+        Debug.Log($"[카메라] 보스 모드 작동 신호 받음! 목표 위치: {centerPos}, 줌 크기: {zoomOutAmount}");
+
         isBossMode = true;
         bossRoomPosition = centerPos;
         targetZoom = zoomOutAmount;

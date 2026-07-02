@@ -3,17 +3,17 @@ using UnityEngine;
 public class EnemyAI : MonoBehaviour
 {
     [Header("이동 세팅")]
-    public float patrolSpeed = 2f;         // 고블린 이동 속도
+    public float patrolSpeed = 2f;         // 이동 속도
     public bool movingRight = false;
 
     [Header("추적(Run) 세팅")]
-    public float runSpeed = 4.5f;        // 🌟 레이를 발견했을 때 달려오는 속도! (더 빠름)
-    public float detectRange = 5f;       // 🌟 플레이어 감지 시야 거리
-    private Transform player;            // 레이의 위치를 기억할 빈칸
+    public float runSpeed = 4.5f;        // 발견했을 때 달려오는 속도
+    public float detectRange = 5f;       // 플레이어 감지 시야 거리
+    private Transform player;            // 위치를 기억할 빈칸
 
     [Header("공격 세팅")]
-    public float attackRange = 1.2f;     // 🌟 공격이 닿는 좁은 사거리
-    public float attackCooldown = 2.0f;  // 🌟 한 번 때리고 다음 공격까지 기다리는 시간
+    public float attackRange = 1.2f;     // 공격이 닿는 좁은 사거리
+    public float attackCooldown = 2.0f;  // 한 번 때리고 다음 공격까지 기다리는 시간
     private float attackTimer = 0f;      // 쿨타임 초시계
 
     [Header("지형 감지 (Raycast)")]
@@ -29,7 +29,7 @@ public class EnemyAI : MonoBehaviour
         rbody = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
-        // 🌟 마법의 코드: 게임이 시작되면 태그가 "Player"인 오브젝트를 스스로 찾아서 기억함!
+        // 게임이 시작되면 태그가 "Player"인 오브젝트를 스스로 찾아서 기억함
         GameObject target = GameObject.FindGameObjectWithTag("Player");
         if (target != null)
         {
@@ -46,7 +46,7 @@ public class EnemyAI : MonoBehaviour
 
     public void Update()
     {
-        // 🌟 1. 공격 쿨타임 초시계는 매 프레임마다 줄어든다!
+        // 공격 쿨타임 초시계는 매 프레임마다 줄어듬
         if (attackTimer > 0f)
         {
             attackTimer -= Time.deltaTime;
@@ -58,14 +58,14 @@ public class EnemyAI : MonoBehaviour
             dist = Vector2.Distance(transform.position, player.position);
         }
 
-        // 🌟 2. 행동 결정: 거리에 따라 3가지 상태로 나뉨!
+        // 행동 결정: 거리에 따라 3가지 상태로 나뉨
         if (dist <= attackRange)
         {
-            // [공격 모드] 사거리 안에 들어왔다!
+            // [공격 모드] 사거리 안에 들어왔다
             rbody.linearVelocity = new Vector2(0f, rbody.linearVelocity.y); // 제자리에 멈춤
             if (anim != null) anim.SetBool("isRunning", false); // 뛰기 애니메이션 끔
 
-            // 쿨타임이 다 돌았다면 공격!
+            // 쿨타임이 다 돌았다면 공격
             if (attackTimer <= 0f)
             {
                 AttackPlayer();
@@ -73,7 +73,7 @@ public class EnemyAI : MonoBehaviour
         }
         else if (dist <= detectRange)
         {
-            // [추적 모드] 시야에는 들어왔지만 아직 멀다!
+            // [추적 모드] 시야에는 들어왔지만 아직 멀다
             bool playerIsRight = player.position.x > transform.position.x;
             if (movingRight != playerIsRight)
             {
@@ -85,7 +85,7 @@ public class EnemyAI : MonoBehaviour
         }
         else
         {
-            // [순찰 모드] 아무도 없다! 평화롭게 걷기
+            // [순찰 모드] 평화롭게 걷기
             RaycastHit2D groundInfo = Physics2D.Raycast(checkPoint.position, Vector2.down, checkDistance, groundLayer);
             Vector2 forwardDirection = movingRight ? Vector2.right : Vector2.left;
             RaycastHit2D wallInfo = Physics2D.Raycast(checkPoint.position, forwardDirection, checkDistance, groundLayer);
@@ -104,16 +104,16 @@ public class EnemyAI : MonoBehaviour
 
     public void AttackPlayer()
     {
-        // 1. 초시계 리셋
+        // 초시계 리셋
         attackTimer = attackCooldown;
 
-        // 2. 공격 애니메이션 실행!
+        // 공격 애니메이션 실행
         if (anim != null)
         {
             anim.SetTrigger("attack");
         }
 
-        // 🌟 새로 추가: 레이의 몸에서 PlayerHealth 부품을 찾아서 체력을 10 깎아라!
+        // PlayerHealth 부품을 찾아서 체력을 10 깎기
         if (player != null)
         {
             PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
@@ -144,11 +144,11 @@ public class EnemyAI : MonoBehaviour
             Gizmos.DrawLine(checkPoint.position, checkPoint.position + forward * checkDistance);
         }
 
-        // 🌟 새로 추가: 추적 감지 범위(노란색 동그라미)를 그려줌!
+        // 추적 감지 범위(노란색 동그라미)를 그려줌
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectRange);
 
-        // 🌟 공격 사거리 기즈모 추가 (빨간색 좁은 원)
+        // 공격 사거리 기즈모 추가 (빨간색 좁은 원)
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }
