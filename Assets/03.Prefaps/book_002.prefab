@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 657962448858539092}
   - component: {fileID: 1949415573761368651}
-  - component: {fileID: -5070946176145690237}
   - component: {fileID: -5208223960239184766}
   m_Layer: 0
   m_Name: book_002
@@ -93,21 +92,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &-5070946176145690237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8057078757153157240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef327466b4917144da1ec7497dab4ce3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpellBook
-  bookMagicType: 1
-  timerUI: {fileID: 0}
-  myLoreText: 
 --- !u!61 &-5208223960239184766
 BoxCollider2D:
   m_ObjectHideFlags: 0

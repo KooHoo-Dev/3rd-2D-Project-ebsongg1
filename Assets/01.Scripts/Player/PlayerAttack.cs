@@ -44,10 +44,7 @@ public class PlayerAttack : MonoBehaviour
     [Header("운석 세팅")]
     public int meteorCount = 15;
 
-    [Header("스토리 이벤트 UI")]
-    public GameObject loreBookUI;
-    public TextMeshProUGUI loreTextUI;
-
+    [Header("시스템 메세지 UI")]
     public GameObject systemMessageUI; // 하단 대화창
     public TextMeshProUGUI systemMessageText;
     private Animator anim;
@@ -196,21 +193,6 @@ public class PlayerAttack : MonoBehaviour
         Debug.Log($"마법 각성! {currentMagic}이 영구 해금!");
     }
 
-    public void OpenLoreBook()
-    {
-        loreBookUI.SetActive(true); // 책 UI 
-
-        Time.timeScale = 0f;
-
-    }
-
-    public void CloseBookAndGetMagic()
-    {
-        loreBookUI.SetActive(false); // 책 UI 끄기
-        Time.timeScale = 1f;         
-
-        StartCoroutine(SystemMessageRoutine());
-    }
 
     public void ShowSystemMessage(string msg)
     {
@@ -232,11 +214,4 @@ public class PlayerAttack : MonoBehaviour
         systemMessageUI.SetActive(false);
     }
 
-
-    public void OpenLoreBook(string bookContent)
-    {
-        loreTextUI.text = bookContent; // 넘겨받은 글로 텍스트 덮어쓰기
-        loreBookUI.SetActive(true);    // 책 UI 켜기
-        Time.timeScale = 0f;           // 시간 멈추기
-    }
 }

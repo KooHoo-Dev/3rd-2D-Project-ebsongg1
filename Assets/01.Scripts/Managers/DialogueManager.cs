@@ -14,6 +14,7 @@ public class DialogueManager : MonoBehaviour
 
     [Header("선택지 UI")]
     public GameObject battleStartButton;
+    public TextMeshProUGUI battleButtonText;
 
     [Header("플레이어 제어")]
     public PlayerController playerController;
@@ -161,9 +162,31 @@ public class DialogueManager : MonoBehaviour
         {
             dialogueText.text = "";
 
+            // 대사가 끝나고 버튼을 띄울 때 다회차 분기 태우기
             if (battleStartButton != null)
             {
                 battleStartButton.SetActive(true);
+
+                // GameManager에서 클리어 횟수를 확인
+                if (GameManager.instance.clearCount == 0)
+                {
+                    Debug.Log("★ 디버그: 현재 1회차입니다. [공격] 버튼 세팅");
+                    // 1회차: 평범한 공격 버튼
+                    if (battleButtonText != null)
+                    {
+                        battleButtonText.text = "*공격";
+                        battleButtonText.color = Color.white; 
+                    }
+                }
+                else
+                {
+                    // 2회차 이상: 텍스트 변환 연출 시작
+                    if (battleButtonText != null)
+                    {
+                        Debug.Log("★ 디버그: 현재 2회차 이상입니다! 글리치 코루틴 시작!");
+                        StartCoroutine(GlitchButtonText());
+                    }
+                }
             }
             else
             {
@@ -193,5 +216,28 @@ public class DialogueManager : MonoBehaviour
         }
 
         playerController.enabled = true;
+    }
+
+    IEnumerator GlitchButtonText()
+    {
+        Debug.Log("★ 디버그: GlitchButtonText 코루틴 진입 성공!");
+        // 1. 처음엔 1회차처럼 똑같이 [ 공격 ]으로 시작해서 안심시킴
+        battleButtonText.text = "*공격";
+        battleButtonText.color = Color.white;
+
+        // 0.5초 대기 (플레이어가 '어? 공격버튼이네' 하고 인식할 찰나의 시간)
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        // 2. 글자가 지지직거리며 깨지는 느낌
+        battleButtonText.text = "*공..";
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        battleButtonText.text = "ㄱ..";
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        // 최종적으로 색상이 붉은색(또는 어두운색)으로 변하며 침묵의 [...] 으로 변경
+        battleButtonText.text = "<color=red>* ... </color>";
+
+        // (선택 사항) 여기서 소름 돋는 치직! 하는 효과음을 재생해도 엄청 멋있음
     }
 }
