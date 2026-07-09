@@ -19,6 +19,9 @@ public class BossAI : MonoBehaviour
     [Header("현재 상태 (인스펙터에서 확인용)")]
     public BossState currentState = BossState.Idle;
 
+    [Header("SFX")]
+    public AudioClip MagicSFX;
+
     [Header("타겟 세팅")]
     public Transform player;
 
@@ -299,6 +302,8 @@ public class BossAI : MonoBehaviour
         // 시간이 지나면 장판은 지우고, 그 자리에 진짜 불기둥 
         Destroy(warning);
         GameObject pillar = Instantiate(flamePillarPrefab, targetPos, Quaternion.identity);
+
+        BGMManager.instance.PlaySFX(MagicSFX);
 
         // 불기둥이 화면에 유지되는 시간 
         yield return new WaitForSeconds(1.0f);

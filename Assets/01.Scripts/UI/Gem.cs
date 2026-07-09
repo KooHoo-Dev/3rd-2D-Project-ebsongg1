@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class Gem : MonoBehaviour
 {
+    [Header("SFX")]
+    public AudioClip gemEatSFX;
+
     [Header("보석 설정")]
     public int gemValue = 10;
 
@@ -9,7 +12,11 @@ public class Gem : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            Debug.Log($"보석 획득! 현재 획득량 : {gemValue}");
+            DataManager.gemScore += gemValue;
+
+            Debug.Log($"보석 획득! 현재 획득 점수 : {gemValue}");
+
+            BGMManager.instance.PlaySFX(gemEatSFX);
 
             Destroy(gameObject);
         }

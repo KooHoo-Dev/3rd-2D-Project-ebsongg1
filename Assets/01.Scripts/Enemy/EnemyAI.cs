@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class EnemyAI : MonoBehaviour
 {
+    [Header("SFX")]
+    public AudioClip goblinAttackSFX;
+
     [Header("이동 세팅")]
     public float patrolSpeed = 2f;         // 이동 속도
     public bool movingRight = false;
@@ -104,6 +107,8 @@ public class EnemyAI : MonoBehaviour
 
     public void AttackPlayer()
     {
+        BGMManager.instance.PlaySFX(goblinAttackSFX);
+
         // 초시계 리셋
         attackTimer = attackCooldown;
 

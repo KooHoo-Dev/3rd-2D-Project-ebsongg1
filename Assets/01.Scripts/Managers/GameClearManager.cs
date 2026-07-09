@@ -64,7 +64,7 @@ public class GameClearManager : MonoBehaviour
 
         if (archerPrefab != null && royalArmySpawnPoint != null)
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 5; i++)
             {
                 // Y축(높이)은 투명 발판과 완벽히 동일, X축만 안 겹치게 흩어짐
                 Vector2 spawnPos = baseSpawnPos + new Vector3(Random.Range(0f, 1.5f), 0, 0);
@@ -89,7 +89,7 @@ public class GameClearManager : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(5.0f);
         ;
 
         // 4. 카메라 이동 (왕국군 쪽으로)

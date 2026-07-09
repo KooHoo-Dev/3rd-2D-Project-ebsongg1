@@ -72,4 +72,6 @@ public class PlayerCameraFollow : MonoBehaviour
         isBossMode = false;
         targetZoom = defaultZoom; // 다시 원래 줌으로 복귀
     }
+
+    
 }

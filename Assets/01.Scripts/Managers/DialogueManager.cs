@@ -1,7 +1,9 @@
 using System.Collections;
+using System.Collections.Generic; // List를 쓰기 위해
 using TMPro; 
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using static System.TimeZoneInfo;
 
 public class DialogueManager : MonoBehaviour
@@ -29,6 +31,23 @@ public class DialogueManager : MonoBehaviour
     public string[] bossDialogues;      // 보스의 대사 리스트
     public float textSpeed = 0.05f;     // 글자가 나타나는 속도
 
+    [Header("브금 설정")]
+    public AudioClip bossBattleBGM;
+    public AudioClip choiceChangeSFX;
+    public AudioClip secretEndingBGM;
+    public AudioClip endingBookBGM;
+
+    [Header("진엔딩 연출용 재료")]
+    public GameObject meteorPrefab;
+    public Transform royalArmySpawnPoint; // 왕국군이 스폰될 중심점
+    public GameObject archerPrefab;       // 왕국군 프리팹
+
+    [Header("진엔딩 화면 연출 (블랙아웃)")]
+    public CanvasGroup blackScreen;       // 화면을 까맣게 덮을 패널 (CanvasGroup 컴포넌트 필요)
+    public GameObject ruinedBackground;   // 황폐한 배경 이미지 오브젝트
+    public GameObject endingBookUI;       // 왕국 멸망 기록 양피지
+    public CanvasGroup endingBookCanvasGroup;
+
     [Header("시작 설정 (체크 시 활성화 즉시 시작)")]
     public bool playOnStart = false;    // 이 값이 true면 씬이 켜지자마자 대화가 시작됨
 
@@ -46,6 +65,7 @@ public class DialogueManager : MonoBehaviour
         {
             StartCinematic();
         }
+
     }
 
     // 보스방 입구에 오브젝트를 만들고 BoxCollider2D (Is Trigger 체크)를 달아두면
@@ -90,6 +110,9 @@ public class DialogueManager : MonoBehaviour
         isDialogueActive = true;
         currentLine = 0;
         if (cinematicUI != null) cinematicUI.SetActive(true);
+
+        // 보스 대화가 시작되는 바로 이 순간에 브금을 끔
+        if (BGMManager.instance != null) BGMManager.instance.FadeOutBGM(1.5f);
 
         // 대화가 시작되자마자 카메라를 보스방 줌아웃 모드로 전환
         if (cameraFollow != null && bossRoomCenter != null)
@@ -198,7 +221,21 @@ public class DialogueManager : MonoBehaviour
     public void OnClickBattleStart()
     {
         if (battleStartButton != null) battleStartButton.SetActive(false); // 버튼 다시 숨기기
-        EndCinematic(); // 대화창 끄고 전투 시작
+
+        if (GameManager.instance.clearCount == 0)
+        {
+            // 1회차: 원래 하던 대로 대화창 끄고 전투 시작
+            if (bossBattleBGM != null) BGMManager.instance.PlayBGM(bossBattleBGM);
+            Debug.Log("1회차: 보스전 시작!");
+            Time.timeScale = 1f;
+            EndCinematic();
+        }
+        else
+        {
+            // 2회차 이상: 전투 대신 진엔딩 자동 연극 시작
+            Debug.Log("2회차 진입: 비밀 엔딩 연출 시작!");
+            StartCoroutine(SecretEndingRoutine());
+        }
     }
 
     public void EndCinematic()
@@ -220,24 +257,204 @@ public class DialogueManager : MonoBehaviour
 
     IEnumerator GlitchButtonText()
     {
+
         Debug.Log("★ 디버그: GlitchButtonText 코루틴 진입 성공!");
-        // 1. 처음엔 1회차처럼 똑같이 [ 공격 ]으로 시작해서 안심시킴
+        // 처음엔 1회차처럼 똑같이 [ 공격 ]으로 시작
         battleButtonText.text = "*공격";
         battleButtonText.color = Color.white;
 
-        // 0.5초 대기 (플레이어가 '어? 공격버튼이네' 하고 인식할 찰나의 시간)
+        // 0.5초 대기 (인식할 찰나의 시간)
         yield return new WaitForSecondsRealtime(1.5f);
 
-        // 2. 글자가 지지직거리며 깨지는 느낌
+        // 글자가 지지직거리며 깨지는 느낌
         battleButtonText.text = "*공..";
         yield return new WaitForSecondsRealtime(1.5f);
 
-        battleButtonText.text = "ㄱ..";
+        battleButtonText.text = "*ㄱ..";
         yield return new WaitForSecondsRealtime(1.5f);
+
+        if (choiceChangeSFX != null && BGMManager.instance != null)
+        {
+            BGMManager.instance.PlaySFX(choiceChangeSFX);
+        }
 
         // 최종적으로 색상이 붉은색(또는 어두운색)으로 변하며 침묵의 [...] 으로 변경
         battleButtonText.text = "<color=red>* ... </color>";
 
-        // (선택 사항) 여기서 소름 돋는 치직! 하는 효과음을 재생해도 엄청 멋있음
     }
+
+
+    // 2회차 엔딩 자동 연출 코루틴
+    IEnumerator SecretEndingRoutine()
+    {
+
+        if (secretEndingBGM != null)
+        {
+            BGMManager.instance.PlayBGM(secretEndingBGM);
+        }
+
+        battleStartButton.SetActive(false);
+        Time.timeScale = 1f;
+
+        // 카메라 추적 기능 강제로 끄기 (고무줄 현상 방지)
+        Camera mainCam = Camera.main;
+        if (mainCam != null)
+        {
+            MonoBehaviour camScript = mainCam.GetComponent("PlayerCameraFollow") as MonoBehaviour;
+            if (camScript != null) camScript.enabled = false;
+        }
+
+        // 왕국군 스폰 
+        List<GameObject> armyList = new List<GameObject>();
+        Vector3 baseSpawnPos = royalArmySpawnPoint.position;
+
+        if (archerPrefab != null && royalArmySpawnPoint != null)
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Vector3 spawnPos = baseSpawnPos + new Vector3(Random.Range(-1.5f, 1.5f), 0, 0);
+                GameObject archer = Instantiate(archerPrefab, spawnPos, Quaternion.identity);
+                armyList.Add(archer);
+            }
+        }
+
+        yield return new WaitForSeconds(1.5f);
+
+        // 카메라가 왕국군 쪽으로 부드럽게 이동
+        Vector3 startCamPos = mainCam.transform.position;
+        Vector3 targetCamPos = new Vector3(baseSpawnPos.x, startCamPos.y, startCamPos.z);
+
+        float camMoveTime = 0f;
+        while (camMoveTime < 1f)
+        {
+            camMoveTime += Time.deltaTime;
+            mainCam.transform.position = Vector3.Lerp(startCamPos, targetCamPos, camMoveTime);
+            yield return null;
+        }
+
+        // 머리 위에 운석 추락
+        if (meteorPrefab != null)
+        {
+            foreach (GameObject archer in armyList)
+            {
+                if (archer != null)
+                {
+                    Vector3 skyPos = archer.transform.position + new Vector3(0, 5f, 0);
+                    Instantiate(meteorPrefab, skyPos, Quaternion.identity);
+                }
+            }
+        }
+
+        yield return new WaitForSeconds(1.0f);
+
+        // 운석 직격, 왕국군 전멸 
+        foreach (GameObject archer in armyList)
+        {
+            if (archer != null) archer.transform.rotation = Quaternion.Euler(0, 0, -90f);
+        }
+
+        yield return new WaitForSeconds(2f);
+
+        // 카메라 다시 주인공 쪽으로 원상복귀
+        camMoveTime = 0f;
+        while (camMoveTime < 1f)
+        {
+            camMoveTime += Time.deltaTime;
+            mainCam.transform.position = Vector3.Lerp(targetCamPos, startCamPos, camMoveTime);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1f);
+
+        //보스 대사
+        dialogueText.text = "...";
+        yield return new WaitForSeconds(2f);
+
+        dialogueText.text = "흠...";
+        yield return new WaitForSeconds(2f);
+
+        dialogueText.text = "...";
+        yield return new WaitForSeconds(2f);
+
+        dialogueText.text = "아무래도 우리의 목적은 같아 보이는군.";
+        yield return new WaitForSeconds(3f);
+
+        // 화면부터 먼저 서서히 완벽하게 까맣게 덮음
+        float fadeAlpha = 0f;
+        if (blackScreen != null)
+        {
+            blackScreen.gameObject.SetActive(true);
+            while (fadeAlpha < 1f)
+            {
+                fadeAlpha += Time.deltaTime / 1.5f;
+                blackScreen.alpha = fadeAlpha;
+                yield return null;
+            }
+        }
+
+        // 화면이 완전히 새까말 때, 뒤에서 시네마틱 UI 끄기 
+        dialogueText.transform.parent.gameObject.SetActive(false);
+
+        // 까만 상태로 1.5초 유지
+        yield return new WaitForSeconds(1.5f);
+
+        // 까만 화면 뒤에서 배경과 책 UI 켜기 (책은 투명도 0으로 시작)
+        if (ruinedBackground != null) ruinedBackground.SetActive(true);
+        if (endingBookUI != null)
+        {
+            endingBookUI.SetActive(true);
+            endingBookUI.transform.SetAsLastSibling();
+            if (endingBookCanvasGroup != null) endingBookCanvasGroup.alpha = 0f; 
+        }
+
+        // 까만 화면 서서히 걷어내기 (배경이 스르륵 등장)
+        while (fadeAlpha > 0f)
+        {
+            fadeAlpha -= Time.deltaTime / 1.5f;
+            if (blackScreen != null) blackScreen.alpha = fadeAlpha;
+            yield return null;
+        }
+
+        // 배경이 다 나오면, 책 UI 서서히 띄우기
+        if (endingBookCanvasGroup != null)
+        {
+            BGMManager.instance.PlayBGM(endingBookBGM);
+
+            float bookAlpha = 0f;
+            while (bookAlpha < 1f)
+            {
+                bookAlpha += Time.deltaTime / 1.5f;
+                endingBookCanvasGroup.alpha = bookAlpha;
+                yield return null;
+            }
+        }
+    }
+
+    public void GoToTitleScene()
+    {
+        // 팍 넘어가지 않고, 서서히 까매지는 코루틴 시작
+        StartCoroutine(FadeOutToTitleRoutine());
+    }
+
+    IEnumerator FadeOutToTitleRoutine()
+    {
+        // 다시 까만 패널을 서서히 진하게 만듦
+        if (blackScreen != null)
+        {
+            blackScreen.transform.SetAsLastSibling(); // 까만 화면을 책보다 맨 앞으로 끄집어냄
+            float fadeAlpha = 0f;
+            while (fadeAlpha < 1f)
+            {
+                fadeAlpha += Time.deltaTime / 1.5f;
+                blackScreen.alpha = fadeAlpha;
+                yield return null;
+            }
+        }
+
+        // 화면이 완전히 까매지면 타이틀로 이동
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Scenes_Title");
+    }
+
+  
 }

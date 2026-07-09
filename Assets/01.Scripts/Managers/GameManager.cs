@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             ResetData();
+            UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
     }
 

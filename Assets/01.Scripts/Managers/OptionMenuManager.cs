@@ -9,22 +9,15 @@ public class OptionMenuManager : MonoBehaviour
 
     [Header("UI 슬라이더")]
     public Slider sfxSlider;
-    public Slider bgmSlider; 
-     
+    public Slider bgmSlider;
+
+    [Header("끌 옵션창 패널 ")]
+    public GameObject optionPanel;
+
 
     public void Start()
     {
-        // 슬라이더의 최소/최대값 세팅 
-        // 유니티 믹서는 로그 스케일(-80dB ~ 0dB)을 쓰기 때문에 0을 쓰면 에러가 남. 0.0001이 최소임
-        bgmSlider.minValue = 0.0001f;
-        bgmSlider.maxValue = 1f;
-
-        sfxSlider.minValue = 0.0001f;
-        sfxSlider.maxValue = 1f;
-
-        // 슬라이더 기본값을 1(최대 볼륨)로 둠
-        bgmSlider.value = 1f;
-        sfxSlider.value = 1f;
+ 
     }
 
     // Music 슬라이더가 움직일 때 실행될 함수
@@ -44,6 +37,9 @@ public class OptionMenuManager : MonoBehaviour
     public void OnClickOkButton()
     {
         // 옵션창 닫기
-        gameObject.SetActive(false);
+        if (optionPanel != null)
+        {
+            optionPanel.SetActive(false);
+        }
     }
 }

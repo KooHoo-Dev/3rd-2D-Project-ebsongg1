@@ -59,6 +59,13 @@ public class BossHealth : MonoBehaviour
         isDead = true;
         Debug.Log("보스 처치 완료!");
 
+        if (BGMManager.instance != null)
+        {
+            BGMManager.instance.FadeOutBGM(1.0f);
+        }
+
+        GameManager.instance.AddClearCount();
+
         if (hpbarUI != null) hpbarUI.SetActive(false);
 
         if (anim != null) anim.SetTrigger("Death");
@@ -97,5 +104,7 @@ public class BossHealth : MonoBehaviour
         {
             camScript.EndBossMode();
         }
+
+
     }
 }

@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour
 {
+    [Header("SFX")]
+    public AudioClip playerHitSFX;
+
     [Header("체력 세팅")]
     public int maxHealth = 10;
     public int currentHealth;
@@ -39,6 +42,8 @@ public class PlayerHealth : MonoBehaviour
         // 이미 죽은 상태라면 고블린이 아무리 때려도 이 밑의 코드는 절대 실행 안 됨
         if (isDead) return;
         if (isInvincible) return;
+
+        BGMManager.instance.PlaySFX(playerHitSFX);
 
         // 체력 깎기
         currentHealth -= damage;
