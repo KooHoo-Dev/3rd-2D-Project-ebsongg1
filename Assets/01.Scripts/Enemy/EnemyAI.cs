@@ -32,7 +32,7 @@ public class EnemyAI : MonoBehaviour
         rbody = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
 
-        // 게임이 시작되면 태그가 "Player"인 오브젝트를 스스로 찾아서 기억함
+        // 게임이 시작되면 태그가 "Player"인 오브젝트를 스스로 찾아서 기억
         GameObject target = GameObject.FindGameObjectWithTag("Player");
         if (target != null)
         {
@@ -61,10 +61,10 @@ public class EnemyAI : MonoBehaviour
             dist = Vector2.Distance(transform.position, player.position);
         }
 
-        // 행동 결정: 거리에 따라 3가지 상태로 나뉨
+        // 행동 결정: 거리에 따라 3가지 상태
         if (dist <= attackRange)
         {
-            // [공격 모드] 사거리 안에 들어왔다
+            // [공격 모드] 사거리 안에 들어옴
             rbody.linearVelocity = new Vector2(0f, rbody.linearVelocity.y); // 제자리에 멈춤
             if (anim != null) anim.SetBool("isRunning", false); // 뛰기 애니메이션 끔
 
@@ -76,7 +76,7 @@ public class EnemyAI : MonoBehaviour
         }
         else if (dist <= detectRange)
         {
-            // [추적 모드] 시야에는 들어왔지만 아직 멀다
+            // [추적 모드] 시야에는 들어왔지만 아직 멂
             bool playerIsRight = player.position.x > transform.position.x;
             if (movingRight != playerIsRight)
             {
@@ -118,7 +118,7 @@ public class EnemyAI : MonoBehaviour
             anim.SetTrigger("attack");
         }
 
-        // PlayerHealth 부품을 찾아서 체력을 10 깎기
+        // PlayerHealth 부품을 찾아서 체력 깎기
         if (player != null)
         {
             PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
@@ -132,11 +132,11 @@ public class EnemyAI : MonoBehaviour
     public void Flip()
     {
         movingRight = !movingRight;
-        // 주인공한테 썼던 180도 회전 코드 
+         
         transform.Rotate(0f, 180f, 0f);
     }
 
-    // 유니티 에디터 화면에서 레이저가 잘 나가는지 눈으로 보기 위한 기즈모
+    // 확인용 기즈모
     private void OnDrawGizmos()
     {
         if (checkPoint != null)
@@ -149,11 +149,11 @@ public class EnemyAI : MonoBehaviour
             Gizmos.DrawLine(checkPoint.position, checkPoint.position + forward * checkDistance);
         }
 
-        // 추적 감지 범위(노란색 동그라미)를 그려줌
+        // 추적 감지 범위(노란색 원)
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectRange);
 
-        // 공격 사거리 기즈모 추가 (빨간색 좁은 원)
+        // 공격 사거리 (빨간색 원)
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
     }

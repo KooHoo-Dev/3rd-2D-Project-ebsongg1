@@ -11,7 +11,7 @@ public class GemUI : MonoBehaviour
 
     public void Start()
     {
-        // 씬이 시작될 때, 보석 점수가 0점이면 UI 전체를 숨겨버리기
+        // 씬이 시작될 때, 보석 점수가 0점이면 UI 전체를 숨기기
         if (DataManager.gemScore == 0 && gemUIPanel != null)
         {
             gemUIPanel.SetActive(false);
@@ -20,13 +20,13 @@ public class GemUI : MonoBehaviour
 
     public void Update()
     {
-        // 보석 점수가 1 이상인데 UI가 아직 꺼져있다면? -> 켜주기
+        // 보석 점수가 1 이상인데 UI가 아직 꺼져있다면 켜주기
         if (DataManager.gemScore > 0 && gemUIPanel != null && !gemUIPanel.activeSelf)
         {
             gemUIPanel.SetActive(true);
         }
 
-        // UI가 켜져 있을 때만 점수 글씨를 업데이트해 주기
+        // UI가 켜져 있을 때만 점수 글씨를 업데이트
         if (gemUIPanel != null && gemUIPanel.activeSelf && inGameGemText != null)
         {
             // ": 10" 형식으로 출력

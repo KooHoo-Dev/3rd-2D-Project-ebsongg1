@@ -9,7 +9,7 @@ public class Meteor : MonoBehaviour
 
     public void Start()
     {
-        // 소멸 예약만 남기고 복잡한 계산은 싹 제거
+        // 소멸 예약만 남기고 복잡한 계산은 제거
         Destroy(gameObject, lifeTime);
     }
 

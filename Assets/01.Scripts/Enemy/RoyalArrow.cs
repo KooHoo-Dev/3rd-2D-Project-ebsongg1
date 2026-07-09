@@ -26,7 +26,7 @@ public class RoyalArrow : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // 주인공에게 치명상을 입혀서 확정 죽음(Death 애니메이션) 처리
+            // 주인공에게 치명상을 입혀서 확정 죽음(애니메이션) 처리
             PlayerHealth ph = other.GetComponent<PlayerHealth>();
             if (ph != null) ph.TakeDamage(999);
 

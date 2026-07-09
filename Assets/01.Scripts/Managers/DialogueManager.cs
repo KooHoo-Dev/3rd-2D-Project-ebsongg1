@@ -43,9 +43,9 @@ public class DialogueManager : MonoBehaviour
     public GameObject archerPrefab;       // 왕국군 프리팹
 
     [Header("진엔딩 화면 연출 (블랙아웃)")]
-    public CanvasGroup blackScreen;       // 화면을 까맣게 덮을 패널 (CanvasGroup 컴포넌트 필요)
-    public GameObject ruinedBackground;   // 황폐한 배경 이미지 오브젝트
-    public GameObject endingBookUI;       // 왕국 멸망 기록 양피지
+    public CanvasGroup blackScreen;       // 화면을 덮을 패널 (CanvasGroup 컴포넌트 필요)
+    public GameObject ruinedBackground;   // 배경 이미지 오브젝트
+    public GameObject endingBookUI;       
     public CanvasGroup endingBookCanvasGroup;
 
     [Header("시작 설정 (체크 시 활성화 즉시 시작)")]
@@ -68,8 +68,8 @@ public class DialogueManager : MonoBehaviour
 
     }
 
-    // 보스방 입구에 오브젝트를 만들고 BoxCollider2D (Is Trigger 체크)를 달아두면
-    // 플레이어가 그 구역에 걸어 들어오는 순간 자동으로 대화가 시작되는 함수
+    // 보스방 입구에 오브젝트(BoxCollider2D)
+    // 플레이어가 그 구역에 들어오는 순간 자동으로 대화가 시작
     public void OnTriggerEnter2D(Collider2D other)
     {
         if (!hasStarted && other.CompareTag("Player"))
@@ -126,7 +126,7 @@ public class DialogueManager : MonoBehaviour
         // 대화창이 켜지자마자 버튼은 숨김
         if (battleStartButton != null) battleStartButton.SetActive(false);
 
-        // 주인공을 찾아서 완벽하게 물리/애니메이션 굳히기
+        // 주인공을 찾아서 물리/애니메이션 굳히기
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -167,7 +167,7 @@ public class DialogueManager : MonoBehaviour
         foreach (char c in bossDialogues[currentLine].ToCharArray())
         {
             dialogueText.text += c;
-            // Time.unscaledDeltaTime을 쓰면 Time.timeScale = 0 상태에서도 정상 작동함
+            // (Time.unscaledDeltaTime을 쓰면 Time.timeScale = 0 상태에서도 정상 작동)
             yield return new WaitForSecondsRealtime(textSpeed);
         }
 
@@ -247,7 +247,6 @@ public class DialogueManager : MonoBehaviour
         if (bossAI != null)
         {
             // 대화가 끝난 직후 보스가 곧바로 플레이어를 쫓아가도록 상태 강제 변경 (시점 초기화 방지)
-            // BossAI 상태 변수명이나 구조에 맞춰 대문자/이름을 살짝 조절해야 할 수 있음
             bossAI.currentState = BossAI.BossState.Move;
             bossAI.enabled = true;
         }
@@ -263,10 +262,9 @@ public class DialogueManager : MonoBehaviour
         battleButtonText.text = "*공격";
         battleButtonText.color = Color.white;
 
-        // 0.5초 대기 (인식할 찰나의 시간)
+        // 몇초 대기 (인식할 찰나의 시간)
         yield return new WaitForSecondsRealtime(1.5f);
 
-        // 글자가 지지직거리며 깨지는 느낌
         battleButtonText.text = "*공..";
         yield return new WaitForSecondsRealtime(1.5f);
 
@@ -278,7 +276,7 @@ public class DialogueManager : MonoBehaviour
             BGMManager.instance.PlaySFX(choiceChangeSFX);
         }
 
-        // 최종적으로 색상이 붉은색(또는 어두운색)으로 변하며 침묵의 [...] 으로 변경
+        // 색상이 붉은색으로 변하며 [...] 으로 변경
         battleButtonText.text = "<color=red>* ... </color>";
 
     }
@@ -379,7 +377,7 @@ public class DialogueManager : MonoBehaviour
         dialogueText.text = "아무래도 우리의 목적은 같아 보이는군.";
         yield return new WaitForSeconds(3f);
 
-        // 화면부터 먼저 서서히 완벽하게 까맣게 덮음
+        // 화면부터 먼저 서서히 까맣게 덮음
         float fadeAlpha = 0f;
         if (blackScreen != null)
         {
@@ -392,7 +390,7 @@ public class DialogueManager : MonoBehaviour
             }
         }
 
-        // 화면이 완전히 새까말 때, 뒤에서 시네마틱 UI 끄기 
+        // 화면이 까말 때, 뒤에서 시네마틱 UI 끄기 
         dialogueText.transform.parent.gameObject.SetActive(false);
 
         // 까만 상태로 1.5초 유지
@@ -407,7 +405,7 @@ public class DialogueManager : MonoBehaviour
             if (endingBookCanvasGroup != null) endingBookCanvasGroup.alpha = 0f; 
         }
 
-        // 까만 화면 서서히 걷어내기 (배경이 스르륵 등장)
+        // 까만 화면 서서히 걷어내기
         while (fadeAlpha > 0f)
         {
             fadeAlpha -= Time.deltaTime / 1.5f;

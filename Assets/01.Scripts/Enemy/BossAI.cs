@@ -12,7 +12,7 @@ public class BossAI : MonoBehaviour
         RangeAttack,// 패턴 1: 유령탄 쏘기
         MeleeAttack,// 패턴 2: 지팡이 치기
         CastMagic,  // 패턴 3: 흑염 기둥 소환
-        CastMeteor,
+        CastMeteor, // 패턴 4
         Dead        // 사망
     }
 
@@ -62,7 +62,7 @@ public class BossAI : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
 
         // 씬에 있는 플레이어를 자동으로 찾아옴
-        // Tag가 "Player"로 설정되어 있어야 함
+        // (Tag가 "Player"로 설정되어 있어야 함)
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
         {
@@ -84,7 +84,7 @@ public class BossAI : MonoBehaviour
         }
 
         // 보스가 플레이어를 발견하고 전투 중일 때만 필살기 타이머가 흐르게 제한
-        // 이제 Idle 상태나 CastMagic중에는 시간이 멈춤
+        // Idle 상태나 CastMagic중에는 시간이 멈춤
         if (currentState == BossState.Move || currentState == BossState.RangeAttack || currentState == BossState.MeleeAttack)
         {
             magicTimer += Time.deltaTime;
@@ -213,7 +213,7 @@ public class BossAI : MonoBehaviour
             currentState = BossState.Idle;
             if (anim != null) anim.SetBool("isRunning", false);
 
-            // 플레이어가 도망쳤으니 화면 위에 떠 있던 보스 체력바도 다시 부드럽게 숨겨주기
+            // 화면에 떠 있던 보스 체력바도 다시 숨겨주기
             BossHealth bossHealth = GetComponent<BossHealth>();
             if (bossHealth != null && bossHealth.hpbarUI != null)
             {
@@ -248,7 +248,7 @@ public class BossAI : MonoBehaviour
         currentState = BossState.Move; // 쏘고 나면 다시 이동 상태로
     }
 
-    // 패턴 2: 근접 지팡이 넉백 공격 코루틴
+    // 패턴 2: 근접 지팡이 공격 코루틴
     IEnumerator MeleeAttackRoutine()
     {
         isAttacking = true;
@@ -271,7 +271,7 @@ public class BossAI : MonoBehaviour
             }
         }
 
-        // 공격 후 딜레이 (나머지 시간)
+        // 공격 후 딜레이 
         yield return new WaitForSeconds(1.0f);
 
         isAttacking = false;
@@ -296,10 +296,9 @@ public class BossAI : MonoBehaviour
         // 그 자리에 경고 장판 생성
         GameObject warning = Instantiate(warningPrefab, targetPos, Quaternion.identity);
 
-        // 1.5초 기다려줌
         yield return new WaitForSeconds(1.5f);
 
-        // 시간이 지나면 장판은 지우고, 그 자리에 진짜 불기둥 
+        // 시간이 지나면 장판은 지우고, 불기둥 생성
         Destroy(warning);
         GameObject pillar = Instantiate(flamePillarPrefab, targetPos, Quaternion.identity);
 
@@ -328,7 +327,7 @@ public class BossAI : MonoBehaviour
         // 공중 발판으로 점프(이동)
         if (platformPoint != null)
         {
-            // (점프 애니메이션이 있다면 여기서 실행)
+            // 점프 애니메이션(시간 이슈로 못넣음)
             // if (anim != null) anim.SetTrigger("Jump");
 
             transform.position = platformPoint.position;

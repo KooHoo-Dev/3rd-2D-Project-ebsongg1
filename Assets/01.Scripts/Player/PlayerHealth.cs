@@ -17,29 +17,28 @@ public class PlayerHealth : MonoBehaviour
 
     [Header("피격 무적(i-frame) 세팅")]
     public float iFrameDuration = 1.5f; // 맞았을 때 무적 유지 시간
-    private bool isInvincible = false;  // 지금 무적 상태인가?
+    private bool isInvincible = false;  // 지금 무적 상태인가
     private bool isDead = false;
 
     public bool isEnding = false;
 
-    // 배열로 변경: 그림 조각들을 담음
+    // 배열로 변경(그림 조각들)
     private SpriteRenderer[] spriteRenderers;
     private Animator anim;
 
     public void Start()
     {
         currentHealth = maxHealth;
-        // 내 몸을 포함해 자식들(머리, 팔, 다리 등)에 있는 모든 그림 부품을 다 찾아옴
+        // 내 몸 포함 자식들(머리, 팔, 다리 등)에 있는 모든 부품을 다 찾아옴
         spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
-        UpdateHealthUI(); // 시작할 때 UI 꽉 차 있게 업데이트
+        UpdateHealthUI(); // 시작할 때 UI 꽉 차 있게
 
         anim = GetComponentInChildren<Animator>();
     }
 
-    // 고블린이 레이를 때릴 때 부를 함수
     public void TakeDamage(int damage)
     {
-        // 이미 죽은 상태라면 고블린이 아무리 때려도 이 밑의 코드는 절대 실행 안 됨
+        // 이미 죽은 상태라면 아무리 때려도 이 밑의 코드는 실행 안 됨
         if (isDead) return;
         if (isInvincible) return;
 
@@ -105,7 +104,7 @@ public class PlayerHealth : MonoBehaviour
             yield return new WaitForSeconds(iFrameDuration / 10f);
         }
 
-        // 혹시 모르니 한 번 더 확실하게 스위치 켜주고 무적 해제
+        // 한 번 더 확실하게 스위치 켜주고 무적 해제
         foreach (SpriteRenderer sr in spriteRenderers)
         {
             if (sr != null) sr.enabled = true;
@@ -125,11 +124,11 @@ public class PlayerHealth : MonoBehaviour
             anim.SetTrigger("Death"); 
         }
 
-        // 죽었으니 더 이상 조종하지 못하게 스크립트 체크박스를 꺼버림
+        // 죽었으니 더 이상 조종하지 못하게 스크립트 체크박스를 끄기
         if (GetComponent<PlayerController>() != null) GetComponent<PlayerController>().enabled = false;
         if (GetComponent<PlayerAttack>() != null) GetComponent<PlayerAttack>().enabled = false;
 
-        // 씬 이동 코루틴을 실행
+        // 씬 이동 코루틴 실행
         StartCoroutine(GoToGameOverScene());
     }
 

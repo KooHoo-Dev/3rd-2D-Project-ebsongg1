@@ -20,7 +20,7 @@ public class PlayerCameraFollow : MonoBehaviour
 
     public void Start()
     {
-        // 내 몸(카메라)에 있는 Camera 부품을 가져와서 기본 줌(Size)을 기억해둠
+        // 내 몸(카메라)에 있는 Camera 부품을 가져와서 기본 줌(Size)을 기억
         cam = GetComponent<Camera>();
         if (cam != null)
         {
@@ -31,7 +31,7 @@ public class PlayerCameraFollow : MonoBehaviour
 
     public void LateUpdate()
     {
-        // 대화 중 시간 정지 상태에서도 카메라가 부드럽게 움직이도록 unscaledDeltaTime 사용
+        // (대화 중 시간 정지 상태에서도 카메라가 부드럽게 움직이도록 unscaledDeltaTime 사용)
         float dt = Time.unscaledDeltaTime;
 
         // 1. 위치 이동 (보스 모드 vs 일반 모드)

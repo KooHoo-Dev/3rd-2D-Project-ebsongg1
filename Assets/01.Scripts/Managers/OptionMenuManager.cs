@@ -23,7 +23,7 @@ public class OptionMenuManager : MonoBehaviour
     // Music 슬라이더가 움직일 때 실행될 함수
     public void SetBGMVolume(float volume)
     {
-        // Mathf.Log10을 써야 슬라이더가 중간에 있을 때 소리가 갑자기 확 줄어드는 현상을 막을 수 있음
+        // (Mathf.Log10을 써야 슬라이더가 중간에 있을 때 소리가 갑자기 확 줄어드는 현상을 막을 수 있음)
         mainMixer.SetFloat("BGMVolume", Mathf.Log10(volume) * 20);
     }
 

@@ -97,10 +97,10 @@ public class SpellBook : MonoBehaviour
             if (BGMManager.instance != null) BGMManager.instance.StopBGM();
         }
 
-        // 2초 동안은 UI에 적어둔 평범한 원본 글씨를 읽게 둠
+        // 잠깐 원본 글씨를 읽게 두기
         yield return new WaitForSecondsRealtime(2f);
 
-        // 책에 빨간 글씨 뜰 때 효과음
+        // 빨간 글씨 뜰 때 효과음
         if (glitchSFX != null && BGMManager.instance != null)
             BGMManager.instance.PlaySFX(glitchSFX);
 
@@ -108,12 +108,12 @@ public class SpellBook : MonoBehaviour
         {
             if (bookNumber == 1)
             {
-                // 1번 책: 태그를 달아둔 텍스트로 갈아끼움 (특정 글자만 빨갛게)
+                // 1번 책: 태그를 달아둔 텍스트로 갈아끼우기 (특정 글자만 빨갛게)
                 loreTextUI.text = corruptedText;
             }
             else if (bookNumber == 2)
             {
-                // 2번 책: UI에 적어둔 원본 글씨 밑에 새로운 붉은 문장을 덧붙임
+                // 2번 책: UI에 적어둔 원본 글씨 밑에 새로운 붉은 문장을 덧붙이기
                 loreTextUI.text = originalTextBackup + "\n\n" + addedSentence;
             }
         }

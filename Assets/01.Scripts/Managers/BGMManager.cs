@@ -16,10 +16,10 @@ public class BGMManager : MonoBehaviour
     [Header("기본 BGM 볼륨")]
     public float maxBGMVolume = 1f;
 
-    // 아무 스크립트에서나 이거 부르면 브금 꺼짐
+    // 아무 스크립트에서나 부르면 브금 꺼짐
     public void StopBGM() { audioSource.Stop(); }
 
-    // 아무 스크립트에서나 이거 부르면 효과음 재생됨
+    // 아무 스크립트에서나 부르면 효과음 재생
     public void PlaySFX(AudioClip clip) { sfxSource.PlayOneShot(clip); }
 
     public void Awake()
@@ -46,7 +46,7 @@ public class BGMManager : MonoBehaviour
         }
     }
 
-    // 아무 스크립트에서나 이 함수를 부르면 브금이 바뀜
+    // 아무 스크립트에서나 부르면 브금이 바뀜
     public void PlayBGM(AudioClip newClip)
     {
         // 틀어달라고 한 브금이 이미 재생 중인 브금이랑 똑같으면 무시 (처음부터 다시 재생되는 거 방지)
@@ -68,10 +68,9 @@ public class BGMManager : MonoBehaviour
 
     public void CrossFadeBGM(AudioClip newClip, float fadeTime = 2f)
     {
-        // 똑같은 음악이면 무시
         if (audioSource.clip == newClip) return;
 
-        // 부드럽게 음악을 갈아끼우는 코루틴 시작
+        // 부드럽게 음악을 바꾸는 코루틴 시작
         StartCoroutine(FadeRoutine(newClip, fadeTime));
     }
 
@@ -106,7 +105,7 @@ public class BGMManager : MonoBehaviour
             yield return null;
         }
 
-        // 혹시 모르니 목표 볼륨으로 확실하게 고정
+        // 목표 볼륨으로 확실하게 고정
         audioSource.volume = maxBGMVolume;
     }
 
@@ -132,7 +131,7 @@ public class BGMManager : MonoBehaviour
         audioSource.volume = 0f;
         audioSource.Stop();
 
-        // 나중에 다른 음악 틀 때를 대비해서 볼륨을 다시 원래대로 복구해둠
+        // 나중에 다른 음악 틀 때를 대비해서 볼륨을 다시 원래대로 복구
         audioSource.volume = maxBGMVolume;
     }
 

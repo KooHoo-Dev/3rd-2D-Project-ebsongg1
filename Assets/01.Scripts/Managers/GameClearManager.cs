@@ -30,13 +30,13 @@ public class GameClearManager : MonoBehaviour
     // BossHealth.cs에서 보스가 죽을 때 호출하는 함수
     public void TriggerGameClear()
     {
-        Debug.Log("엔딩 시퀀스 시작!"); // 콘솔창에 이게 뜨면 정상 작동 중인 것
+        Debug.Log("엔딩 시퀀스 시작!"); // 콘솔창에 뜨면 정상 작동 중
         StartCoroutine(EndingSequence());
     }
 
     IEnumerator EndingSequence()
     {
-        // 1. 플레이어 제어권 박탈 (이동 불가, 물리 엔진 고정)
+        // 플레이어 제어권 박탈 (이동 불가, 물리 엔진 고정)
         if (player != null)
         {
             PlayerHealth ph = player.GetComponent<PlayerHealth>();
@@ -56,17 +56,17 @@ public class GameClearManager : MonoBehaviour
             }
         }
 
-        // 보스 처치 후 여운 1.5초
+        // 보스 처치 후 여운 
         yield return new WaitForSeconds(1.5f);
 
-        // 엉뚱한 동적 계산 다 버리고, 투명 발판 위치(baseSpawnPos)에서 스폰
+        // 투명 발판 위치(baseSpawnPos)에서 스폰
         Vector3 baseSpawnPos = royalArmySpawnPoint.position;
 
         if (archerPrefab != null && royalArmySpawnPoint != null)
         {
             for (int i = 0; i < 5; i++)
             {
-                // Y축(높이)은 투명 발판과 완벽히 동일, X축만 안 겹치게 흩어짐
+                // Y축(높이)은 투명 발판과 동일, X축만 안 겹치게 흩어짐
                 Vector2 spawnPos = baseSpawnPos + new Vector3(Random.Range(0f, 1.5f), 0, 0);
                 Instantiate(archerPrefab, spawnPos, Quaternion.identity);
             }
@@ -92,7 +92,7 @@ public class GameClearManager : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         ;
 
-        // 4. 카메라 이동 (왕국군 쪽으로)
+        // 카메라 이동 (왕국군 쪽으로)
         PlayerCameraFollow camFollow = mainCam.GetComponent<PlayerCameraFollow>();
         if (camFollow != null) camFollow.enabled = false;
 
@@ -110,7 +110,7 @@ public class GameClearManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
-        // 5. 검은 화면 페이드 아웃
+        // 검은 화면 페이드 아웃
         if (fadeGroup != null)
         {
             while (fadeGroup.alpha < 1.0f)
@@ -122,7 +122,7 @@ public class GameClearManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        // 6. 타이틀 씬 복귀
+        // 타이틀 씬 복귀
         DataManager.killCount = 0;
         SceneManager.LoadScene("Scenes_Title");
 

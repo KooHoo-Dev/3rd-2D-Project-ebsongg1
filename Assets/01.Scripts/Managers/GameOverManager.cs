@@ -24,7 +24,7 @@ public class GameOverManager : MonoBehaviour
         }
     }
 
-    // [다시 도전하기] 버튼용 함수 (인게임 씬 이름에 맞게 수정 가능)
+    // [다시 도전하기] 버튼용 함수 
     public void OnClickRetry()
     {
         // 다시 시작할 때는 킬카운트를 0으로 리셋해줘야 함

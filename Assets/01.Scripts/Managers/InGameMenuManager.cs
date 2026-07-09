@@ -11,7 +11,7 @@ public class InGameMenuManager : MonoBehaviour
 
     void Start()
     {
-        // 시작할 때는 인게임 메뉴가 무조건 꺼져있어야 함
+        // 시작할 때는 인게임 메뉴가 무조건 꺼져있게
         if (menuPanel != null) menuPanel.SetActive(false);
         if (optionPanel != null) optionPanel.SetActive(false);
     }
@@ -48,11 +48,11 @@ public class InGameMenuManager : MonoBehaviour
     // 2. New Game 버튼 
     public void OnClickNewGame()
     {
-        // 씬 넘어가기 전에 무조건 시간을 1로 돌려놔야 함
+        // 씬 넘어가기 전에 무조건 시간을 1로 돌려놓기
         Time.timeScale = 1f;
         DataManager.killCount = 0;
 
-        // 현재 활성화된 씬을 다시 로드함
+        // 현재 활성화된 씬을 다시 로드
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

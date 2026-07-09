@@ -202,7 +202,7 @@ public class PlayerAttack : MonoBehaviour
             systemMessageText.text = msg;
         }
 
-        // 2. 이미 대화창이 떠있을 때 또 메시지가 오면 꼬일 수 있으니, 기존 초시계를 끄고 새로 켬
+        // 이미 대화창이 떠있을 때 또 메시지가 오면 꼬일 수 있으니, 기존 초시계를 끄고 새로 키기
         StopCoroutine("SystemMessageRoutine");
         StartCoroutine("SystemMessageRoutine");
     }

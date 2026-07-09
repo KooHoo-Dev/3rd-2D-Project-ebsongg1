@@ -4,7 +4,7 @@ public class MeteorProjectile : MonoBehaviour
 {
     public float speed = 10f;
     public int damage = 1;
-    public GameObject hitEffectPrefab; // 이펙트 빈칸
+    public GameObject hitEffectPrefab; 
 
     public void Start()
     {

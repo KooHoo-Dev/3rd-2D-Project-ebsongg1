@@ -3,7 +3,7 @@ using System.Collections; // 코루틴
 
 public class Enemy : MonoBehaviour
 {
-    public int hp = 3; // 마법 3방
+    public int hp = 3; 
     private Animator anim;
     private SpriteRenderer sr;
 

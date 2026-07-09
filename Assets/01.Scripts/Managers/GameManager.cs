@@ -14,11 +14,11 @@ public class GameManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            //DontDestroyOnLoad(gameObject); // 씬이 넘어가도 안 부서지고 유지됨
+            //DontDestroyOnLoad(gameObject); // 씬이 넘어가도 안 부서지고 유지
         }
         else
         {
-            // 이미 매니저가 존재하는데 다른 씬에서 또 생기려고 하면 짝퉁을 파괴함
+            // (이미 매니저가 존재하는데 다른 씬에서 또 생기려고 하면 짝퉁을 파괴)
             Destroy(gameObject);
         }
 
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha9))
         {
             AddClearCount();
-            Debug.Log("🚨 [치트키 발동] 강제로 클리어 횟수를 1 올렸습니다!");
+            Debug.Log("[치트키 발동] 강제로 클리어 횟수를 1 올렸습니다!");
         }
 
         // 키보드 숫자 0을 누르면 데이터 초기화 (다시 1회차로)
@@ -46,7 +46,7 @@ public class GameManager : MonoBehaviour
     // [데이터 불러오기]
     public void LoadGameData()
     {
-        // "ClearCount"라는 이름표로 저장된 숫자를 가져옴. (저장된 게 아예 없으면 기본값 0)
+        // "ClearCount"라는 이름표로 저장된 숫자를 가져옴 (저장된 게 아예 없으면 기본값 0)
         clearCount = PlayerPrefs.GetInt("ClearCount", 0);
         Debug.Log("현재 클리어 횟수: " + clearCount);
     }
